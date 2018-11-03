@@ -59,10 +59,12 @@ def load():
         except OSError:
             dependencies, libzbar = load_objects(Path(__file__).parent)
     else:
-        # Assume a shared library on the path
-        path = find_library('zbar')
+        path = os.getenv('ZBAR_PATH')
         if not path:
-            raise ImportError('Unable to find zbar shared library')
+            # Assume a shared library on the path
+            path = find_library('zbar')
+            if not path:
+                raise ImportError('Unable to find zbar shared library')
         libzbar = cdll.LoadLibrary(path)
         dependencies = []
 
